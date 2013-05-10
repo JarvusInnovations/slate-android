@@ -46,7 +46,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class WilcoService extends Service{
 private BroadcastReceiver rec;
@@ -68,11 +67,9 @@ private BroadcastReceiver rec;
 	@SuppressLint("SimpleDateFormat")
 	SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	String TIME = s.format(new Date());
-	//TimeUnit.MILLISECONDS.toMinutes(millis);
 
 	@Override
 	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 		
@@ -154,12 +151,12 @@ private BroadcastReceiver rec;
 						e1.printStackTrace();
 					} break;
 					
-				case 2: try {
-					writetoFile("[PackageStatus]: A Application has been installed: "+TIME+";\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+//				case 2: try {
+//					writetoFile("[PackageStatus]: A Application has been installed: "+TIME+";\n");
+//					} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					} break;
 					
 				case 3: try {
 					writetoFile("systemState\t"+TIME+"\tHEADSET_PLUGGED_IN\n");
@@ -285,7 +282,7 @@ private BroadcastReceiver rec;
 	@Override
     public void onDestroy() {
 		try {
-			writetoFile("onDestroy\t"+TIME+"\tSTOPPED\n");
+			writetoFile("systemState\t"+TIME+"\tSYSTEM_STOPPED\n");
 			unregisterReceiver(rec);
 			Log.i("SLATEd", "Receiver Unregistered");
 		} catch (IOException e) {e.printStackTrace();}
@@ -303,7 +300,7 @@ private BroadcastReceiver rec;
 			writetoFile("systemState\t"+TIME+"\tWiFi IS OFF\n");
 			wifi.setWifiEnabled(true);
 			Log.i("SLATEd", "WiFi is now turning on");
-			writetoFile("wifiState\t"+TIME+"\tON\n");
+			writetoFile("systemState\t"+TIME+"\tENABLED\n");
 		}else if(wifi.isWifiEnabled()){
 			Log.i("SLATEd", "WiFi is on already");
 			writetoFile("systemState\t"+TIME+"\tWiFi ALREADY ON\n");
@@ -381,7 +378,7 @@ private BroadcastReceiver rec;
 					e1.printStackTrace();
 				}
 			}
-		},10000,360000);
+		},30000,300000);
 	}
 	
 	public void sendLogFile(){
@@ -397,6 +394,7 @@ private BroadcastReceiver rec;
 						createNewLog();
 					}else{
 						Log.i("SLATEd", "SERVER ProBLEM / CAN nOT Connect via HTTP");
+						
 					}
 					
 				} catch (ClientProtocolException e) {
@@ -422,7 +420,7 @@ private BroadcastReceiver rec;
 					}
 			}
 			
-		},30000,1800000);
+		},30000,1800000); //Every 30 min
 	}
 	
 	public void writetoFile(String string) throws IOException{
@@ -487,6 +485,7 @@ private BroadcastReceiver rec;
 		
 		List<RunningServiceInfo> services = mgr.getRunningServices(100);
 		Log.e("DEBUG", "services:");
+		writetoFile("serviceInfo\t"+TIME+"\ttotal="+services.size());
 		for(Iterator<RunningServiceInfo> i = services.iterator();i.hasNext();){
 				RunningServiceInfo p = (RunningServiceInfo)i.next();     
 //				Log.e("SLATEd", "     process name: "+p.process);
@@ -495,25 +494,29 @@ private BroadcastReceiver rec;
 //				Log.e("SLATEd", "     client package name: "+p.clientPackage);         
 //				Log.e("SLATEd", "     activeSince started (secs): "+p.activeSince/1000.0);
 //				Log.e("SLATEd", "     last active: "+p.lastActivityTime/1000.0);
-				writetoFile("serviceInfo\t"+TIME+"\tname="+p.process+"&activeSince="+p.activeSince+"&lastActive="+p.lastActivityTime+"\n");
+				writetoFile("&name[]="+p.process+"&activeSince[]="+p.activeSince+"&lastActivity[]="+p.lastActivityTime);
 				
-			}
-		
+		}
+		writetoFile("\n");
+
 		 List<ActivityManager.RecentTaskInfo> recentTasks = mgr.getRecentTasks(100,ActivityManager.RECENT_WITH_EXCLUDED);
 		 Log.e("SLATEd", "Recently started tasks");
 		 int count = 0;
+		 writetoFile("taskInfo\t"+TIME+"\ttotal="+recentTasks.size());
 		 for(Iterator i = recentTasks.iterator();i.hasNext();){
 			 count++;
 			 RecentTaskInfo p = (RecentTaskInfo)i.next();
 			 Log.e("SLATEd", "  package name: "+p.baseIntent.getComponent().getPackageName());
-			 writetoFile("taskInfo\t"+TIME+"\tname="+URLEncoder.encode(p.baseIntent.getComponent().getPackageName(),"UTF-8")+"&order="+count+"\n");
+			 writetoFile("&name[]="+URLEncoder.encode(p.baseIntent.getComponent().getPackageName(),"UTF-8")+"&order[]="+count);
 		 }
+		 writetoFile("\n");
 
 		List<RunningAppProcessInfo> processes = mgr.getRunningAppProcesses();
 		Log.e("SLATEd", "Running processes:");
+		writetoFile("appProcesses\t"+TIME+"\ttotal="+processes.size());
 		for(Iterator i = processes.iterator(); i.hasNext();){
 			RunningAppProcessInfo p = (RunningAppProcessInfo)i.next();
-			writetoFile("appProcesses\t"+TIME+"\tname="+URLEncoder.encode(p.processName,"UTF-8")+"&pid="+p.pid+"\n");
+			writetoFile("&name[]="+URLEncoder.encode(p.processName,"UTF-8")+"&pid[]="+p.pid);
 			Log.e("SLATEd", "  process name: "+p.processName);
 			Log.e("SLATEd", "     pid: "+p.pid);                    // process id
 //            for( String str : p.pkgList){
@@ -522,6 +525,7 @@ private BroadcastReceiver rec;
 //			writetoFile("[RunningProcesses]: Process name: "+p.processName+", "+TIME+";\n"+"[RunningProcesses]: Process pid: "+p.pid+", "+TIME+";\n");
 			
 		}
+		writetoFile("\n");
 		
 	}
 	
