@@ -154,7 +154,6 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 
 	@Override
 	public void onUpdateFailed(Exception e) {
-		Intent i = new Intent(this, SlateHome.class);
-		startActivity(i);
+		throw new UnsupportedOperationException(e);
 	}
 }
