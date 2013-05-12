@@ -12,9 +12,9 @@
  to you under the Apache License, Version 2.0 (the
  "License"); you may not use this file except in compliance
  with the License.  You may obtain a copy of the License at
- 
+
      http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing,
  software distributed under the License is distributed on an
  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -6808,27 +6808,27 @@ require('cordova/channel').onNativeReady.fire();
 
 
     // Try to XHR the cordova_plugins.json file asynchronously.
-    try { // we commented we were going to try, so let us actually try and catch
-        var xhr = new context.XMLHttpRequest();
-        xhr.onload = function() {
-            // If the response is a JSON string which composes an array, call handlePluginsObject.
-            // If the request fails, or the response is not a JSON array, just call finishPluginLoading.
-            var obj = this.responseText && JSON.parse(this.responseText);
-            if (obj && obj instanceof Array && obj.length > 0) {
-                handlePluginsObject(obj);
-            } else {
-                finishPluginLoading();
-            }
-        };
-        xhr.onerror = function() {
-            finishPluginLoading();
-        };
-        xhr.open('GET', 'cordova_plugins.json', true); // Async
-        xhr.send();
-    }
-    catch(err){
+//    try { // we commented we were going to try, so let us actually try and catch
+//        var xhr = new context.XMLHttpRequest();
+//        xhr.onload = function() {
+//            // If the response is a JSON string which composes an array, call handlePluginsObject.
+//            // If the request fails, or the response is not a JSON array, just call finishPluginLoading.
+//            var obj = this.responseText && JSON.parse(this.responseText);
+//            if (obj && obj instanceof Array && obj.length > 0) {
+//                handlePluginsObject(obj);
+//            } else {
+//                finishPluginLoading();
+//            }
+//        };
+//        xhr.onerror = function() {
+//            finishPluginLoading();
+//        };
+//        xhr.open('GET', 'cordova_plugins.json', true); // Async
+//        xhr.send();
+//    }
+//    catch(err){
         finishPluginLoading();
-    }
+//    }
 }(window));
 
 
