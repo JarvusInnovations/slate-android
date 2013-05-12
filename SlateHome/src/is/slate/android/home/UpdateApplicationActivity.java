@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 
 import com.googlecode.plouf.AbstractApplicationDownloader;
@@ -39,15 +40,15 @@ import com.googlecode.plouf.task.UpdateApplicationTask;
 public class UpdateApplicationActivity extends Activity implements UpdateCheckedListener {
 
 	private static final int	DIALOG_CHECKING_UPDATE		= 1;
-	private static final int	DIALOG_CHECKING_EXCEPTION	= 2;
+	//private static final int	DIALOG_CHECKING_EXCEPTION	= 2;
 	private static final int	DIALOG_UPDATING				= 3;
-	private static final int	DIALOG_UPDATING_EXCEPTION	= 4;
+	//private static final int	DIALOG_UPDATING_EXCEPTION	= 4;
 
 	private String				updateVersion;
 	private ProgressDialog		checkingUpdateDialog;
 	private ProgressDialog		updatingDialog;
-	private String				updatingExceptionMessage;
-	private String				checkingExceptionMessage;
+	//private String				updatingExceptionMessage;
+	//private String				checkingExceptionMessage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +60,10 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 		} catch (NameNotFoundException e) {
 			throw new IllegalStateException("Should not happen", e);
 		}
+		
+		Log.d(UpdateApplicationActivity.class.getSimpleName(), "Got current version: "+ versionName);
 
-		UpdateChecker checker = new SimpleUrlUpdateChecker("http://localhost/version.htm", versionName, new VersionComparator());
+		UpdateChecker checker = new SimpleUrlUpdateChecker("http://wilco.io/SlateHome/version", versionName, new VersionComparator());
 
 		new CheckUpdateTask(checker, this).execute();
 
@@ -69,14 +72,15 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
+		Log.d(UpdateApplicationActivity.class.getSimpleName(), "Creating dialog: " + id);
 
 		switch (id) {
 			case DIALOG_CHECKING_UPDATE:
 				checkingUpdateDialog = new ProgressDialog(this);
-				checkingUpdateDialog.setTitle("Checking for version");
+				checkingUpdateDialog.setTitle("Checking for update");
 				checkingUpdateDialog.setCanceledOnTouchOutside(false);
 				checkingUpdateDialog.setCancelable(false);
-				checkingUpdateDialog.setMessage("check check check");
+				checkingUpdateDialog.setMessage("Making sure you have the latest software, this could take a moment");
 				checkingUpdateDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				return checkingUpdateDialog;
 			case DIALOG_UPDATING:
@@ -85,6 +89,8 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 				updatingDialog.setCanceledOnTouchOutside(false);
 				updatingDialog.setCancelable(false);
 				return updatingDialog;
+				
+			/*
 			case DIALOG_UPDATING_EXCEPTION:
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -99,6 +105,7 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 					}
 				});
 				return builder.create();
+			*/
 		}
 
 		return null;
@@ -108,10 +115,14 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		super.onPrepareDialog(id, dialog);
 		switch (id) {
-			case DIALOG_CHECKING_UPDATE:
+			case DIALOG_UPDATING:
 				((ProgressDialog) dialog).setMessage("Updating to version " + updateVersion);
+				break;
+			/*
 			case DIALOG_UPDATING_EXCEPTION:
-				((AlertDialog) dialog).setMessage("An exception occured while updating: " + updatingExceptionMessage);
+				((AlertDialog) dialog).setMessage("An exception occurred while updating: " + updatingExceptionMessage);
+				break;
+			*/
 		}
 	}
 
@@ -134,18 +145,20 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 		ApplicationDownloader downloader = new AbstractApplicationDownloader() {
 			@Override
 			protected String getDownloadUrl() {
-				return "http://localhost/PloufApp-" + version + ".apk";
+				return "http://wilco.io/SlateHome/" + version + ".apk";
 			}
 		};
-
-		ApplicationUpdater updater = new ApplicationUpdater(downloader, "/sdcard/AppUpdating.apk");
+		
+		String downloadPath = getCacheDir().getAbsolutePath() + "/AppUpdating.apk";
+		Log.d(UpdateApplicationActivity.class.getSimpleName(), "Saving update to: "+ downloadPath);
+		
+		ApplicationUpdater updater = new ApplicationUpdater(downloader, downloadPath);
 		UpdateExceptionListener listener = new UpdateExceptionListener() {
 			@Override
 			public void onUpdateException(Exception e) {
-				Log.e(UpdateApplicationActivity.class.getSimpleName(), "An Exception occured while updating", e);
-				updatingExceptionMessage = e.getMessage();
+				Log.e(UpdateApplicationActivity.class.getSimpleName(), "An Exception occurred while updating", e);
 				updatingDialog.dismiss();
-				showDialog(DIALOG_UPDATING_EXCEPTION);
+				onUpdateFailed(e);
 			}
 		};
 
@@ -154,6 +167,8 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 
 	@Override
 	public void onUpdateFailed(Exception e) {
-		throw new UnsupportedOperationException(e);
+		finish();
+		Intent i = new Intent(this, SlateHome.class);
+		startActivity(i);
 	}
 }

@@ -42,13 +42,14 @@ public class ApplicationUpdater {
 		InputStream is = appDownloader.getDownloadInputStream();
 
 		File f = new File(tmpFilePath);
+		f.setReadable(true, false);
 
 		OutputStream out = new FileOutputStream(f);
 		copy(is, out);
 
-		Intent i = new Intent();
-		i.setAction(Intent.ACTION_VIEW);
+		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setDataAndType(Uri.parse("file://" + tmpFilePath), "application/vnd.android.package-archive");
+		i.addFlags(i.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(i);
 	}
 
