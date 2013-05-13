@@ -63,7 +63,7 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 		
 		Log.d(UpdateApplicationActivity.class.getSimpleName(), "Got current version: "+ versionName);
 
-		UpdateChecker checker = new SimpleUrlUpdateChecker("http://wilco.io/SlateHome/version", versionName, new VersionComparator());
+		UpdateChecker checker = new SimpleUrlUpdateChecker("http://wilco.io/SlateHome/latest", versionName, new VersionComparator());
 
 		new CheckUpdateTask(checker, this).execute();
 
