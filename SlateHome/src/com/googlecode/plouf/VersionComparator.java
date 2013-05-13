@@ -60,7 +60,7 @@ public class VersionComparator implements Comparator<String> {
 					return 1;
 				}
 			} else {
-				int compare = it1.next().compareTo(it2.next());
+				int compare = Integer.valueOf(it1.next()).compareTo(Integer.valueOf(it2.next()));
 				if (compare != 0) {
 					return compare;
 				}
