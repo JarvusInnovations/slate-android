@@ -1,6 +1,7 @@
 package com.phonegap.plugin.macaddress;
 
-import org.apache.cordova.api.Plugin;
+import org.apache.cordova.api.CallbackContext;
+import org.apache.cordova.api.CordovaPlugin;
 import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,42 +13,22 @@ import android.net.wifi.WifiManager;
 /**
  * The Class MacAddressPlugin.
  */
-public class MacAddressPlugin extends Plugin {
+public class MacAddressPlugin extends CordovaPlugin {
 
-    @Override
-    public boolean isSynch(String action) {
-        if (action.equals("getMacAddress")) {
-            return true;
-        }
-        return false;
-    }
-    
     /* (non-Javadoc)
      * @see org.apache.cordova.api.Plugin#execute(java.lang.String, org.json.JSONArray, java.lang.String)
      */
     @Override
-    public PluginResult execute(String action, JSONArray args, String callbackId) {
-        PluginResult result = null;
-
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
 
         if (action.equals("getMacAddress")) {
-
             String macAddress = this.getMacAddress();
- 
-            if (macAddress != null) {
-                JSONObject JSONresult = new JSONObject();
-                try {
-                    JSONresult.put("mac", macAddress);
-                    result = new PluginResult(PluginResult.Status.OK, JSONresult);
-                } catch (JSONException jsonEx) {
-         
-                    result = new PluginResult(PluginResult.Status.JSON_EXCEPTION);
-                }
-
-            }
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, macAddress);
+ 			callbackContext.sendPluginResult(pluginResult);
+ 			return true;
         }
         
-        return result;
+        return false;
     }
 
     /**
@@ -57,7 +38,7 @@ public class MacAddressPlugin extends Plugin {
      */
     private String getMacAddress() {
         String macAddress = null;
-        WifiManager wm = (WifiManager) this.ctx.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wm = (WifiManager) cordova.getActivity().getSystemService(Context.WIFI_SERVICE);
         macAddress = wm.getConnectionInfo().getMacAddress();
 
         if (macAddress == null || macAddress.length() == 0) {
