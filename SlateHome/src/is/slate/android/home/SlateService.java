@@ -306,9 +306,6 @@ public class SlateService extends Service{
 		WifiInfo wInfo = wifiMan.getConnectionInfo();
 		ANDROID_MACADDRESS = wInfo.getMacAddress();
 
-	//	int ipaddress = wInfo.getIpAddress();
-
-
 		SharedPreferences tabletDetails = this.getSharedPreferences("SlateDeviceInfo", MODE_PRIVATE);
 		Editor edit = tabletDetails.edit();
 		edit.clear();
