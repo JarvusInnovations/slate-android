@@ -19,6 +19,7 @@
 
 package is.slate.android.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import org.apache.cordova.*;
 
@@ -32,6 +33,9 @@ public class SlateHome extends DroidGap
         // Set by <content src="index.html" /> in config.xml
         super.loadUrl(Config.getStartUrl(), 10000);
         //super.loadUrl("file:///android_asset/www/index.html")
+
+		Intent intent = new Intent(this, SlateService.class);
+		this.getContext().startService(intent);
     }
 }
 
