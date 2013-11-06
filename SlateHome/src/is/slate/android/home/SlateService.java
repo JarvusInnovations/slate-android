@@ -51,7 +51,6 @@ public class SlateService extends Service{
 	private static final String OS_VR = android.os.Build.VERSION.RELEASE;
 	private static final String ANDROID_SERIAL = android.os.Build.ID;
 	private String ANDROID_MACADDRESS;
-//	private int TTL;
 //	private static final long TRDUPTIME = android.os.SystemClock.currentThreadTimeMillis();
 
 	//private static final String URL = "http://myscoutteam.net/test/Slated/slated.php";
@@ -64,7 +63,6 @@ public class SlateService extends Service{
 		@SuppressLint("SimpleDateFormat")
 		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String TIME = s.format(new Date());
-		//TimeUnit.MILLISECONDS.toMinutes(millis);
 
 	@Override
 	public IBinder onBind(Intent intent) {
