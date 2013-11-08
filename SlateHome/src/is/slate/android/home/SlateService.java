@@ -4,11 +4,11 @@ package is.slate.android.home;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,9 +22,7 @@ import org.apache.http.entity.FileEntity;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
-import android.app.ActivityManager.RecentTaskInfo;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.app.ActivityManager.RunningServiceInfo;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -51,14 +49,8 @@ public class SlateService extends Service{
 	private static final String OS_VR = android.os.Build.VERSION.RELEASE;
 	private static final String ANDROID_SERIAL = android.os.Build.ID;
 	private String ANDROID_MACADDRESS;
-//	private int TTL;
-//	private static final long TRDUPTIME = android.os.SystemClock.currentThreadTimeMillis();
 
-	//private static final String URL = "http://myscoutteam.net/test/Slated/slated.php";
-		//private static final String URL = "http://10.20.30.42/Slated/slated.php";
-		//private static final String URL = "http://furiousbox.sytes.net/Slated/slated.php";
 		private static final String URL = "http://kfulton.sites.emr.ge/process";
-		//private static final String URL = "http://kfulton.sites.emr.ge/register-tablet";
 		Date dat = new Date();
 		//CharSequence TIME = DateFormat.format("yyyy-mm-dd HH:ii:ss", dat.getTime());
 		@SuppressLint("SimpleDateFormat")
@@ -68,66 +60,25 @@ public class SlateService extends Service{
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	public void onCreate(){
 		ANDROIDID = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
 		super.onCreate();
 		Log.i("SLATEd", "SLATEd Service Started: onCreate()");
+		
 		try {
 			forceWifi();		//Force WiFi on
 			bootCollector();	//Collect device info (device specific)
-			sendLogFile();		//After 30 seconds, every half an hour
-			recurTask();
-			MemCollector();		//Collect task Info
+			sendLogFile();		//After 30 seconds and every half hour
+			recurTask();		//Collect TaskInfo every 15 seconds 
 		}
 			catch (IOException e) {e.printStackTrace();}
-
-		// BroadCast Receivers the programmatic way
-		rec = new SlateReceiver();
-		IntentFilter filter = new IntentFilter("android.intent.action.SCREEN_OFF");
-		filter.addAction("android.intent.action.SCREEN_ON");
-		filter.addAction("android.intent.action.HEADSET_PLUG");
-		filter.addAction("android.intent.action.ACTION_POWER_DISCONNECTED");
-		filter.addAction("android.intent.action.ACTION_POWER_CONNECTED");
-		filter.addAction("android.intent.action.USER_PRESENT");
-		filter.addAction("android.intent.action.CAMERA_BUTTON");
-		filter.addAction("android.intent.action.BATTERY_CHANGED");
-		filter.addAction("android.intent.action.BATTERY_LOW");
-		filter.addAction("android.intent.action.MEDIA_MOUNTED");
-		filter.addAction("android.intent.action.ACTION_SHUTDOWN");
-		filter.addAction("android.intent.action.PACKAGE_DATA_CLEARED");
-		filter.addAction("android.intent.action.MEDIA_EJECT"); //Data More in extras
-		filter.addAction("android.intent.action.MEDIA_MOUNTED");
-		filter.addAction("android.intent.action.MY_PACKAGE_REPLACED");
-		filter.addAction("android.intent.action.CONFIGURATION_CHANGED");
-		registerReceiver(rec, filter);
+		
+			addIntentFilterStuff();
 
 }
-	private int setTTL() {
-		int currentCount;
-		SharedPreferences ttlCount = this.getSharedPreferences("TTL", MODE_PRIVATE);
-		if (ttlCount.contains("TTL")) {
-			currentCount = ttlCount.getInt("TTL", 0);
-			currentCount ++;
-			Editor edit = ttlCount.edit();
-			edit.clear();
-			edit.putInt("TTL", currentCount);
-			edit.commit();
-			Log.i("SLATEd","TTL is Now "+currentCount);
-			}else{
-				Log.i("SLATEd","TTL First Ever Set to 1");
-			Editor edit = ttlCount.edit();
-			edit.clear();
-			edit.putInt("TTL", 1);
-			edit.commit();
-			currentCount = 1;
-			}
-		return currentCount;
-	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -283,6 +234,29 @@ public class SlateService extends Service{
 			Log.i("SLATEd", "Receiver Unregistered");
 		} catch (IOException e) {e.printStackTrace();}
     }
+	
+	private void addIntentFilterStuff() {
+		rec = new SlateReceiver();
+		// BroadCast Receivers the programmatic way
+		IntentFilter filter = new IntentFilter("android.intent.action.SCREEN_OFF");
+		filter.addAction("android.intent.action.SCREEN_ON");
+		filter.addAction("android.intent.action.HEADSET_PLUG");
+		filter.addAction("android.intent.action.ACTION_POWER_DISCONNECTED");
+		filter.addAction("android.intent.action.ACTION_POWER_CONNECTED");
+		filter.addAction("android.intent.action.USER_PRESENT");
+		filter.addAction("android.intent.action.CAMERA_BUTTON");
+		filter.addAction("android.intent.action.BATTERY_CHANGED");
+		filter.addAction("android.intent.action.BATTERY_LOW");
+		filter.addAction("android.intent.action.MEDIA_MOUNTED");
+		filter.addAction("android.intent.action.ACTION_SHUTDOWN");
+		filter.addAction("android.intent.action.PACKAGE_DATA_CLEARED");
+		filter.addAction("android.intent.action.MEDIA_EJECT"); //Data More in extras
+		filter.addAction("android.intent.action.MEDIA_MOUNTED");
+		filter.addAction("android.intent.action.MY_PACKAGE_REPLACED");
+		filter.addAction("android.intent.action.CONFIGURATION_CHANGED");
+		registerReceiver(rec, filter);
+		
+	}
 
 	private void forceWifi() throws IOException{
 		//NetworkInfo netInfo = null;
@@ -309,9 +283,6 @@ public class SlateService extends Service{
 		WifiInfo wInfo = wifiMan.getConnectionInfo();
 		ANDROID_MACADDRESS = wInfo.getMacAddress();
 
-	//	int ipaddress = wInfo.getIpAddress();
-
-
 		SharedPreferences tabletDetails = this.getSharedPreferences("SlateDeviceInfo", MODE_PRIVATE);
 		Editor edit = tabletDetails.edit();
 		edit.clear();
@@ -329,7 +300,6 @@ public class SlateService extends Service{
 	}
 
 	private void recurTask() {
-		// TODO Auto-generated method stub
 		Timer tim = new Timer();
 		tim.scheduleAtFixedRate(new TimerTask(){
 			@Override
@@ -342,7 +312,7 @@ public class SlateService extends Service{
 					e1.printStackTrace();
 				}
 			}
-		},10000,360000);
+		},10000,15000);
 	}
 
 	public void sendLogFile(){
@@ -373,13 +343,7 @@ public class SlateService extends Service{
 				file.delete();
 						Log.i("SLATEd", "Log Deleted");
 						writetoFile("Log Started\t"+TIME+"\t ttl="+setTTL()+"&deviceID="+ANDROIDID+"&osRelease="+OS_VR+"&uptime="+UPTIME+"&serial="+ANDROID_SERIAL+"&macAddress="+ANDROID_MACADDRESS+"&availableMem="+avilMEM()+"MBs\n");
-//						writetoFile("[Log TTL]: "+setTTL()+";\n");
-//						writetoFile("[DeviceID]: "+ANDROIDID+";\n");
-//						writetoFile("[OS_Release]: "+OS_VR+";\n");
-//						writetoFile("[DeviceUptime]: "+UPTIME+";\n");
-//						writetoFile("[DeviceSerial]: "+ANDROID_SERIAL+";\n");
-//						writetoFile("[DeviceMacAddress]: "+ANDROID_MACADDRESS+";\n");
-//						writetoFile("availableMemory:"+avilMEM()+"MBs\n");
+
 			}
 
 		},30000,1800000);
@@ -391,26 +355,57 @@ public class SlateService extends Service{
 		fos.close();
 		Log.i("SLATEd", string);
 	}
+	
+	private int setTTL() {
+		int currentCount;
+		SharedPreferences ttlCount = this.getSharedPreferences("TTL", MODE_PRIVATE);
+		if (ttlCount.contains("TTL")) {
+			currentCount = ttlCount.getInt("TTL", 0);
+			currentCount ++;
+			Editor edit = ttlCount.edit();
+			edit.clear();
+			edit.putInt("TTL", currentCount);
+			edit.commit();
+			Log.i("SLATEd","TTL is Now "+currentCount);
+			}else{
+				Log.i("SLATEd","TTL First Ever Set to 1");
+			Editor edit = ttlCount.edit();
+			edit.clear();
+			edit.putInt("TTL", 1);
+			edit.commit();
+			currentCount = 1;
+			}
+		return currentCount;
+	}
+	
+	private void setCurrentTask(String taskName) throws UnsupportedEncodingException, IOException{
+		String taskSetName;
+		SharedPreferences currTask = this.getSharedPreferences("CurrentTaskName", MODE_PRIVATE);
+			if(currTask.contains("CurrentTaskName")){
+				taskSetName = currTask.getString("CurrentTaskName", null);
+					if(taskName.equals(taskSetName)){
+						Log.i("SLATEd", "No new task started");
+					}else{
+						Log.i("SLATEd", "TaskInfo has changed, the new task is "+taskName);
+						Editor edit = currTask.edit();
+						edit.clear();
+						edit.putString("CurrentTaskName", taskName);
+						edit.commit();
+						writetoFile("taskInfo\t"+TIME+"\tname="+URLEncoder.encode(taskName,"UTF-8")+"&deviceid="+ANDROIDID+"\n");
+					}
+			}else{
+				Log.i("SLATEd","First Task has been set, it is "+taskName);
+				Editor edit = currTask.edit();
+				edit.clear();
+				edit.putString("CurrentTaskName", taskName);
+				edit.commit();
+			}
+
+		
+	}
 
 	@SuppressLint("NewApi")
-	//@SuppressWarnings("deprecation")
 	public void doUpload(String filepath,String filename) throws ClientProtocolException, IOException {
-
-//		HttpClient httpclient = new DefaultHttpClient();
-//	    httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-//	    HttpPost httppost = new HttpPost(URL);
-//	    File file = new File(getFilesDir().toString()+"/SLATEd.log");
-//	    //FileBody fileBody = new FileBody(file, "application/octet-stream");
-//	    MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-//	    ContentBody cbFile = new FileBody(file, "text/plain");
-//	    mpEntity.addPart("log", cbFile);
-//	    //mpEntity.addPart("androidid", new StringBody(ANDROIDID));
-//	    httppost.setEntity(mpEntity);
-//	    HttpResponse response = httpclient.execute(httppost);
-//	    HttpEntity resEntity = response.getEntity();
-//	    String res = resEntity.toString();
-//	    Log.i("SLATEd", res);
-
 		HttpClient http = AndroidHttpClient.newInstance("SLATEd");
 		HttpPost method = new HttpPost(URL+"?mac="+ANDROID_MACADDRESS);
 		method.setEntity(new FileEntity(new File(getFilesDir().toString()+"/SLATEd.log"), "text/plain"));
@@ -428,80 +423,17 @@ public class SlateService extends Service{
 		return true;
 	};
 
-	@SuppressWarnings("rawtypes")
+//	@SuppressWarnings("rawtypes")
 	public void MemCollector() throws IOException{
-
-		ActivityManager mgr = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-//		List<RunningServiceInfo> services = mgr.getRunningServices(100);
-//		List<ActivityManager.RunningTaskInfo> tasks = mgr.getRunningTasks(100);
-//
-//		for(Iterator i = tasks.iterator();i.hasNext();){
-//			RunningTaskInfo task = (RunningTaskInfo)i.next();
-//			Log.e("debug","name: "+task.baseActivity.getPackageName());
-//			Log.e("debug","num of activities"+task.numActivities);
-//			Log.e("debug","top activity: "+task.topActivity.getPackageName());
-//			Log.e("debug","top activity: "+task.topActivity.getClassName());
-//		}
-
-		List<RunningServiceInfo> services = mgr.getRunningServices(100);
-		Log.e("DEBUG", "services:");
-		for(Iterator<RunningServiceInfo> i = services.iterator();i.hasNext();){
-				RunningServiceInfo p = (RunningServiceInfo)i.next();
-//				Log.e("SLATEd", "     process name: "+p.process);
-//				Log.e("SLATEd", "     user id of owner: "+p.uid);
-//				Log.e("SLATEd", "     number of clients: "+p.clientCount);
-//				Log.e("SLATEd", "     client package name: "+p.clientPackage);
-//				Log.e("SLATEd", "     activeSince started (secs): "+p.activeSince/1000.0);
-//				Log.e("SLATEd", "     last active: "+p.lastActivityTime/1000.0);
-				writetoFile("serviceInfo\t"+TIME+"\tname="+p.process+"&activeSince="+p.activeSince+"&lastActive="+p.lastActivityTime+"\n");
-
-			}
-
-		 List<ActivityManager.RecentTaskInfo> recentTasks = mgr.getRecentTasks(100,ActivityManager.RECENT_WITH_EXCLUDED);
-		 //Log.e("SLATEd", "Recently started tasks");
-		 int count = 0;
-		 for(Iterator i = recentTasks.iterator();i.hasNext();){
-			 count++;
-			 RecentTaskInfo p = (RecentTaskInfo)i.next();
-			// Log.e("SLATEd", "  package name: "+p.baseIntent.getComponent().getPackageName());
-			 writetoFile("taskInfo\t"+TIME+"\tname="+URLEncoder.encode(p.baseIntent.getComponent().getPackageName(),"UTF-8")+"&order="+count+"&deviceid="+ANDROIDID+"\n");
+	
+		ActivityManager am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
+		  if (!tasks.isEmpty()){
+			  String topActivityName = tasks.get(0).topActivity.toString();
+			  setCurrentTask(topActivityName);
+		  }
+		 
 		 }
-
-		List<RunningAppProcessInfo> processes = mgr.getRunningAppProcesses();
-		//Log.e("SLATEd", "Running processes:");
-		for(Iterator i = processes.iterator(); i.hasNext();){
-			RunningAppProcessInfo p = (RunningAppProcessInfo)i.next();
-			writetoFile("appProcesses\t"+TIME+"\tname="+URLEncoder.encode(p.processName,"UTF-8")+"&pid="+p.pid+"\n");
-			//Log.e("SLATEd", "  process name: "+p.processName);
-			//Log.e("SLATEd", "     pid: "+p.pid);                    // process id
-//            for( String str : p.pkgList){
-//            	Log.e("DEBUG", "     package: "+str);
-//            }
-//			writetoFile("[RunningProcesses]: Process name: "+p.processName+", "+TIME+";\n"+"[RunningProcesses]: Process pid: "+p.pid+", "+TIME+";\n");
-
-		}
-
-	}
-
-//	chkConn =  new Thread(){
-//	@Override
-//	public void run(){
-//	super.run();
-//	try {
-//		PostBootData();
-//	} catch (ClientProtocolException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} catch (JSONException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//
-//}
-//};chkConn.start();
 
 	private long avilMEM(){
 		MemoryInfo mi = new MemoryInfo();
@@ -509,12 +441,7 @@ public class SlateService extends Service{
 		activityManager.getMemoryInfo(mi);
 		long availableMegs = mi.availMem / 1048576L;
 		return availableMegs;
-
 	}
-
-//	int width = getWindowManager().getDefaultDisplay().getWidth();
-//	int height = getWindowManager().getDefaultDisplay().getHeight();
-
 
 
 }
