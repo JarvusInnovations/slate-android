@@ -87,7 +87,8 @@ public class SlateService extends Service{
 			if(intent.getExtras() != null){
 				switch (intent.getExtras().getInt("SLATEd_CODE")){
 				case 0: try {
-						writetoFile("systemState\t"+TIME+"\tSCREEN_POWERED_OFF\n");
+						String taskName = getCurrentTask();
+						writetoFile("systemState\t"+TIME+"\tSCREEN_POWERED_OFF\tlastTask="+taskName+"\n");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -224,6 +225,16 @@ public class SlateService extends Service{
 			}
 
 	    return START_STICKY;
+	}
+
+	private String getCurrentTask() {
+		String taskname = null;
+		ActivityManager am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
+		  if (!tasks.isEmpty()){
+			  taskname = tasks.get(0).topActivity.toString();
+		  }
+		return taskname;
 	}
 
 	@Override
