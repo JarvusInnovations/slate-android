@@ -90,7 +90,7 @@ public class SlateService extends Service{
 		Log.i("SLATEd","OnStartCommand()");
 			if(intent.getExtras() != null){
 				switch (intent.getExtras().getInt("SLATEd_CODE")){
-				case 0: try {
+				case 17: try {
 						String taskName = getCurrentTask();
 						writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_OFF\tlastTask="+taskName+"\n");
 					} catch (IOException e1) {

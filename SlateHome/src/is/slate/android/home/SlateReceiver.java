@@ -21,7 +21,7 @@ public class SlateReceiver extends BroadcastReceiver{
 			Log.i("SLATEd", "Service Called: onStartCommand");
 		    	if(intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_OFF)){
 		    		Log.i("SLATEd", "Screen Went Off");
-		    		final int ACTION_SCREEN_OFF = 0;
+		    		final int ACTION_SCREEN_OFF = 17;
 		    		Intent i = new Intent(context, SlateService.class);
 		    		i.putExtra("SLATEd_CODE", ACTION_SCREEN_OFF);
 		    	    context.startService(i);
