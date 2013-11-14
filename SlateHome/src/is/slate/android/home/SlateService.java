@@ -422,7 +422,7 @@ public class SlateService extends Service{
 	@SuppressLint("NewApi")
 	public void doUpload(String filepath,String filename) throws ClientProtocolException, IOException {
 		HttpClient http = AndroidHttpClient.newInstance("SLATEd");
-		HttpPost method = new HttpPost(URL+"?mac="+ANDROID_MACADDRESS);
+		HttpPost method = new HttpPost(URL+"?MAC="+ANDROID_MACADDRESS);
 		method.setEntity(new FileEntity(new File(getFilesDir().toString()+"/SLATEd.log"), "text/plain"));
 		HttpResponse response = http.execute(method);
 		Log.i("SLATEd", "Server Response: "+response.toString());
