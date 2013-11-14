@@ -316,7 +316,7 @@ public class SlateService extends Service{
 
 	private void recurTask() {
 		Timer tim = new Timer();
-		tim.scheduleAtFixedRate(new TimerTask(){
+		tim.schedule(new TimerTask(){
 			@Override
 			public void run(){
 				Log.i("SLATEd", "Collecting Device Data....");
@@ -332,7 +332,7 @@ public class SlateService extends Service{
 
 	public void sendLogFile(){
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(new TimerTask(){
+		t.schedule(new TimerTask(){
 			@Override
 			public void run() {
 				try {
