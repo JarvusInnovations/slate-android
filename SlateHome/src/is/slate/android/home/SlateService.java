@@ -92,55 +92,55 @@ public class SlateService extends Service{
 				switch (intent.getExtras().getInt("SLATEd_CODE")){
 				case 0: try {
 						String taskName = getCurrentTask();
-						writetoFile("systemState\t"+TIME+"\tSCREEN_POWERED_OFF\tlastTask="+taskName+"\n");
+						writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_OFF\tlastTask="+taskName+"\n");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 				case 1: try {
-						writetoFile("systemState\t"+TIME+"\tSCREEN_POWERED_ON\n");
+						writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_ON\n");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 2: try {
-					writetoFile("[PackageStatus]: A Application has been installed: "+TIME+";\n");
+					writetoFile(s.format(new Date())+"\tpackageInstalled\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 3: try {
-					writetoFile("systemState\t"+TIME+"\tHEADSET_PLUGGED_IN\n");
+					writetoFile(s.format(new Date())+"\tsystemState\tHEADSET_PLUGGED_IN\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 4: try {
-					writetoFile("systemState\t"+TIME+"\tPOWER_DISCONNECTED\n");
+					writetoFile(s.format(new Date())+"\tsystemState\tPOWER_DISCONNECTED\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 5: try {
-					writetoFile("systemState\t"+TIME+"\tPOWER_CONNECTED\n");
+					writetoFile(s.format(new Date())+"\tsystemState\tPOWER_CONNECTED\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 6: try {
-					writetoFile("systemState\t"+TIME+"\tUSER_PRESENT\n");
+					writetoFile(s.format(new Date())+"\tsystemState\tUSER_PRESENT\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 7: try {
-					writetoFile("systemState\t"+TIME+"\tCAMERA_BUTTON_PUSHED\n");
+					writetoFile(s.format(new Date())+"\tsystemState\tCAMERA_BUTTON_PUSHED\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -154,14 +154,14 @@ public class SlateService extends Service{
 //					} break;
 
 				case 9: try {
-					writetoFile("systemState\t"+TIME+"\tBATTERY_IS_LOW\n");
+					writetoFile(s.format(new Date())+"\tsystemState\tBATTERY_IS_LOW\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 10: try {
-					writetoFile("systemState\t"+TIME+"\tSYSTEM_SHUTDOWN\n");
+					writetoFile(s.format(new Date())+"\tsystemState\tSYSTEM_SHUTDOWN\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -175,28 +175,28 @@ public class SlateService extends Service{
 //					} break;
 
 				case 12: try {
-					writetoFile("[MediaCardState]: External Media has been removed: "+TIME+";\n");
+					writetoFile(s.format(new Date())+"\tmediaCardState\tUNMOUNTED\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 13: try {
-					writetoFile("[MediaCardState]: External Media has been mounted: "+TIME+";\n");
+					writetoFile(s.format(new Date())+"\tmediaCardState\tMOUNTED\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 14: try {
-					writetoFile("[PackageStatus]: An app has been replaced/updated: "+TIME+";\n");
+					writetoFile(s.format(new Date())+"\tappReplaced\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} break;
 
 				case 15: try {
-					writetoFile("[PackageStatus]: An app has been removed completely: "+TIME+";\n");
+					writetoFile(s.format(new Date())+"\tappRemoved\n");
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -212,13 +212,13 @@ public class SlateService extends Service{
 					int offKey = Configuration.KEYBOARDHIDDEN_NO;
 
 						if(orientation == landsc){
-							writetoFile("[AppRotate]: LANDSCAPE: "+TIME+";\n");
+							writetoFile(s.format(new Date())+"\trotate\tLANDSCAPE\n");
 						}else if(orientation == portir){
-							writetoFile("AppRotate\t"+TIME+"\tPORTRAIT\n");
+							writetoFile(s.format(new Date())+"\trotate\tPORTRAIT\n");
 						}else if(orientation == onKey){
-							writetoFile("[AppRotate]: KEYBOARD HIDDEN: "+TIME+";\n");
+							writetoFile(s.format(new Date())+"\tkeyboardToggle\tHIDE\n");
 						}else if(orientation == offKey){
-							writetoFile("[AppRotate]: KEYBOARD SHOWING: "+TIME+";\n");
+							writetoFile(s.format(new Date())+"\tkeyboardToggle\tSHOW\n");
 						}
 					} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -244,7 +244,7 @@ public class SlateService extends Service{
 	@Override
     public void onDestroy() {
 		try {
-			writetoFile("onDestroy\t"+TIME+"\tSTOPPED\n");
+			writetoFile(s.format(new Date())+"\tonDestroy\n");
 			unregisterReceiver(rec);
 			Log.i("SLATEd", "Receiver Unregistered");
 		} catch (IOException e) {e.printStackTrace();}
@@ -281,13 +281,13 @@ public class SlateService extends Service{
 		WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		if(!wifi.isWifiEnabled()){
 			Log.i("SLATEd", "WiFi is off");
-			writetoFile("systemState\t"+TIME+"\tWiFi IS OFF\n");
+			writetoFile(s.format(new Date())+"\twifiToggle\tDISABLED\n");
 			wifi.setWifiEnabled(true);
 			Log.i("SLATEd", "WiFi is now turning on");
-			writetoFile("wifiState\t"+TIME+"\tON\n");
+			writetoFile(s.format(new Date())+"\twifiToggle\tENABLED\n");
 		}else if(wifi.isWifiEnabled()){
 			Log.i("SLATEd", "WiFi is on already");
-			writetoFile("systemState\t"+TIME+"\tWiFi ALREADY ON\n");
+			writetoFile(s.format(new Date())+"\twifiToggle\tALREADY_ENABLED\n");
 		}
 	}
 
@@ -338,12 +338,12 @@ public class SlateService extends Service{
 				try {
 					if(isConnected()){
 						Log.i("SLATEd", "Sever is UP, Sending Log file");
-						writetoFile("Log Ended\t"+TIME+" __EOF__");
+						writetoFile(s.format(new Date())+"\tlogEnd\n");
 						doUpload(getFilesDir().toString()+"/SLATEd.log", "SLATEd.log");
 						createNewLog();
 					}else{
 						Log.i("SLATEd", "SERVER ProBLEM / CAN nOT Connect via HTTP");
-						writetoFile("systemState\t"+TIME+"\tSLATEd LOG POST FAILURE\n");
+						writetoFile(s.format(new Date())+"\tpostFailed\n");
 					}
 
 				} catch (ClientProtocolException e) {
@@ -356,8 +356,8 @@ public class SlateService extends Service{
 			private void createNewLog() throws IOException{
 				File file = new File(getFilesDir().toString()+"/SLATEd.log");
 				file.delete();
-						Log.i("SLATEd", "Log Deleted");
-						writetoFile("Log Started\t"+TIME+"\t ttl="+setTTL()+"&deviceID="+ANDROIDID+"&osRelease="+OS_VR+"&uptime="+UPTIME+"&serial="+ANDROID_SERIAL+"&macAddress="+ANDROID_MACADDRESS+"&availableMem="+avilMEM()+"MBs\n");
+				Log.i("SLATEd", "Log Deleted");
+				writetoFile(s.format(new Date())+"\tlogStart\tttl="+setTTL()+"&deviceID="+ANDROIDID+"&osRelease="+OS_VR+"&uptime="+UPTIME+"&serial="+ANDROID_SERIAL+"&macAddress="+ANDROID_MACADDRESS+"&availableMem="+avilMEM()+"MBs\n");
 
 			}
 
@@ -406,7 +406,7 @@ public class SlateService extends Service{
 						edit.clear();
 						edit.putString("CurrentTaskName", taskName);
 						edit.commit();
-						writetoFile("taskInfo\t"+TIME+"\tname="+URLEncoder.encode(taskName,"UTF-8")+"&deviceid="+ANDROIDID+"\n");
+						writetoFile(s.format(new Date())+"\ttaskActivated\t"+taskName+"\n");
 					}
 			}else{
 				Log.i("SLATEd","First Task has been set, it is "+taskName);
