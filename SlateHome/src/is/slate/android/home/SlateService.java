@@ -444,7 +444,7 @@ public class SlateService extends Service{
 		ActivityManager am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
 		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
 		  if (!tasks.isEmpty()){
-			  String topActivityName = tasks.get(0).topActivity.toString();
+			  String topActivityName = tasks.get(0).topActivity.flattenToString();
 			  setCurrentTask(topActivityName);
 		  }
 		 
