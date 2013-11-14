@@ -55,7 +55,7 @@ public class SlateService extends Service{
 		Date dat = new Date();
 		//CharSequence TIME = DateFormat.format("yyyy-mm-dd HH:ii:ss", dat.getTime());
 		@SuppressLint("SimpleDateFormat")
-		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String TIME = s.format(new Date());
 		//TimeUnit.MILLISECONDS.toMinutes(millis);
 
