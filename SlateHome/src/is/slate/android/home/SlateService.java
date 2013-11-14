@@ -236,7 +236,7 @@ public class SlateService extends Service{
 		ActivityManager am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
 		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
 		  if (!tasks.isEmpty()){
-			  taskname = tasks.get(0).topActivity.toString();
+			  taskname = tasks.get(0).topActivity.flattenToString();
 		  }
 		return taskname;
 	}
