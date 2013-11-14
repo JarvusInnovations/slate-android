@@ -24,6 +24,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.Service;
+import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -69,6 +70,9 @@ public class SlateService extends Service{
 		Log.i("SLATEd", "SLATEd Service Started: onCreate()");
 		
 		try {
+			AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			alarm.setTimeZone("America/New_York");
+
 			forceWifi();		//Force WiFi on
 			bootCollector();	//Collect device info (device specific)
 			sendLogFile();		//After 30 seconds and every half hour
