@@ -327,7 +327,7 @@ public class SlateService extends Service{
 					e1.printStackTrace();
 				}
 			}
-		},10000,15000);
+		}, 10 * 1000, 15 * 1000);
 	}
 
 	public void sendLogFile(){
@@ -361,7 +361,7 @@ public class SlateService extends Service{
 
 			}
 
-		},30000,1800000);
+		}, 30 * 1000, 15 * 60 * 1000);
 	}
 
 	public void writetoFile(String string) throws IOException{
