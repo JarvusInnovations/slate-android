@@ -88,63 +88,64 @@ public class SlateService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		Log.i("SLATEd","OnStartCommand()");
-			if(intent.getExtras() != null){
-				switch (intent.getExtras().getInt("SLATEd_CODE")){
-				case 17: try {
-						String taskName = getCurrentTask();
-						writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_OFF\tlastTask="+taskName+"\n");
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
-				case 1: try {
-						writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_ON\n");
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
-
-				case 2: try {
-					writetoFile(s.format(new Date())+"\tpackageInstalled\n");
-					} catch (IOException e1) {
+		
+		if(intent != null && intent.getExtras() != null){
+			switch (intent.getExtras().getInt("SLATEd_CODE")){
+			case 17: try {
+					String taskName = getCurrentTask();
+					writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_OFF\tlastTask="+taskName+"\n");
+				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
-
-				case 3: try {
-					writetoFile(s.format(new Date())+"\tsystemState\tHEADSET_PLUGGED_IN\n");
-					} catch (IOException e1) {
+					e1.printStackTrace();
+				} break;
+			case 1: try {
+					writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_ON\n");
+				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+					e1.printStackTrace();
+				} break;
 
-				case 4: try {
-					writetoFile(s.format(new Date())+"\tsystemState\tPOWER_DISCONNECTED\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 2: try {
+				writetoFile(s.format(new Date())+"\tpackageInstalled\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 5: try {
-					writetoFile(s.format(new Date())+"\tsystemState\tPOWER_CONNECTED\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 3: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tHEADSET_PLUGGED_IN\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 6: try {
-					writetoFile(s.format(new Date())+"\tsystemState\tUSER_PRESENT\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 4: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tPOWER_DISCONNECTED\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 7: try {
-					writetoFile(s.format(new Date())+"\tsystemState\tCAMERA_BUTTON_PUSHED\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 5: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tPOWER_CONNECTED\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
+
+			case 6: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tUSER_PRESENT\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
+
+			case 7: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tCAMERA_BUTTON_PUSHED\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
 //				case 8: try {
 //					writetoFile("batteryState\t"+TIME+"\tCHANGED;\n");
@@ -153,19 +154,19 @@ public class SlateService extends Service{
 //						e1.printStackTrace();
 //					} break;
 
-				case 9: try {
-					writetoFile(s.format(new Date())+"\tsystemState\tBATTERY_IS_LOW\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 9: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tBATTERY_IS_LOW\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 10: try {
-					writetoFile(s.format(new Date())+"\tsystemState\tSYSTEM_SHUTDOWN\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 10: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tSYSTEM_SHUTDOWN\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
 //				case 11: try {
 //					writetoFile("systemState\t"+TIME+"\tDATA_CLEARED\n");
@@ -174,59 +175,59 @@ public class SlateService extends Service{
 //						e1.printStackTrace();
 //					} break;
 
-				case 12: try {
-					writetoFile(s.format(new Date())+"\tmediaCardState\tUNMOUNTED\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 12: try {
+				writetoFile(s.format(new Date())+"\tmediaCardState\tUNMOUNTED\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 13: try {
-					writetoFile(s.format(new Date())+"\tmediaCardState\tMOUNTED\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 13: try {
+				writetoFile(s.format(new Date())+"\tmediaCardState\tMOUNTED\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 14: try {
-					writetoFile(s.format(new Date())+"\tappReplaced\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 14: try {
+				writetoFile(s.format(new Date())+"\tappReplaced\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 15: try {
-					writetoFile(s.format(new Date())+"\tappRemoved\n");
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+			case 15: try {
+				writetoFile(s.format(new Date())+"\tappRemoved\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				case 16: try {
-					Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-					int orientation = display.getOrientation();
-					Log.i("SLATEd", Integer.toString(orientation));
-					int landsc = Configuration.ORIENTATION_LANDSCAPE;
-					int portir = Configuration.ORIENTATION_PORTRAIT;
-					int onKey = Configuration.KEYBOARDHIDDEN_YES;
-					int offKey = Configuration.KEYBOARDHIDDEN_NO;
+			case 16: try {
+				Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+				int orientation = display.getOrientation();
+				Log.i("SLATEd", Integer.toString(orientation));
+				int landsc = Configuration.ORIENTATION_LANDSCAPE;
+				int portir = Configuration.ORIENTATION_PORTRAIT;
+				int onKey = Configuration.KEYBOARDHIDDEN_YES;
+				int offKey = Configuration.KEYBOARDHIDDEN_NO;
 
-						if(orientation == landsc){
-							writetoFile(s.format(new Date())+"\trotate\tLANDSCAPE\n");
-						}else if(orientation == portir){
-							writetoFile(s.format(new Date())+"\trotate\tPORTRAIT\n");
-						}else if(orientation == onKey){
-							writetoFile(s.format(new Date())+"\tkeyboardToggle\tHIDE\n");
-						}else if(orientation == offKey){
-							writetoFile(s.format(new Date())+"\tkeyboardToggle\tSHOW\n");
-						}
-					} catch (IOException e1) {
-					// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} break;
+					if(orientation == landsc){
+						writetoFile(s.format(new Date())+"\trotate\tLANDSCAPE\n");
+					}else if(orientation == portir){
+						writetoFile(s.format(new Date())+"\trotate\tPORTRAIT\n");
+					}else if(orientation == onKey){
+						writetoFile(s.format(new Date())+"\tkeyboardToggle\tHIDE\n");
+					}else if(orientation == offKey){
+						writetoFile(s.format(new Date())+"\tkeyboardToggle\tSHOW\n");
+					}
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
 
-				}
 			}
+		}
 
 	    return START_STICKY;
 	}
