@@ -19,6 +19,8 @@
 
 package is.slate.android.home;
 
+import com.newrelic.agent.android.NewRelic;
+
 import android.content.Intent;
 import android.os.Bundle;
 import org.apache.cordova.*;
@@ -28,6 +30,10 @@ public class SlateHome extends DroidGap
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+		NewRelic.withApplicationToken(
+			"AAd3e886967d80a3d625905fe3048c721ae719f583"
+		).start(this.getApplication());
+
         super.onCreate(savedInstanceState);
         super.setIntegerProperty("splashscreen", R.drawable.splash);
         // Set by <content src="index.html" /> in config.xml
