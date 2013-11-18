@@ -1,10 +1,6 @@
 package is.slate.android.home;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +8,6 @@ import android.util.Log;
 
 public class SlateReceiver extends BroadcastReceiver{
 
-	@SuppressLint("SimpleDateFormat")
-	SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd-hh:mm:ss");
-	String TIME = s.format(new Date());
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
