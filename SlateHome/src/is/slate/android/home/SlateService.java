@@ -1,12 +1,10 @@
 package is.slate.android.home;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +55,6 @@ public class SlateService extends Service{
 		@SuppressLint("SimpleDateFormat")
 		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String TIME = s.format(new Date());
-		//TimeUnit.MILLISECONDS.toMinutes(millis);
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -88,59 +85,58 @@ public class SlateService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		Log.i("SLATEd","OnStartCommand()");
-		
-		if(intent != null && intent.getExtras() != null){
+		if(intent != null && intent.getAction() != null){
 			switch (intent.getExtras().getInt("SLATEd_CODE")){
-			case 17: try {
+			case SlateReceiver.ACTION_SCREEN_OFF: try {
 					String taskName = getCurrentTask();
 					writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_OFF\tlastTask="+taskName+"\n");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
-			case 1: try {
+			case SlateReceiver.ACTION_SCREEN_ON : try {
 					writetoFile(s.format(new Date())+"\tsystemState\tSCREEN_POWERED_ON\n");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 2: try {
+			case SlateReceiver.APP_INSTALLED: try {
 				writetoFile(s.format(new Date())+"\tpackageInstalled\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 3: try {
+			case SlateReceiver.ACTION_HEADSET_PLUG: try {
 				writetoFile(s.format(new Date())+"\tsystemState\tHEADSET_PLUGGED_IN\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 4: try {
+			case SlateReceiver.ACTION_POWER_DISCONNECTED: try {
 				writetoFile(s.format(new Date())+"\tsystemState\tPOWER_DISCONNECTED\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 5: try {
+			case SlateReceiver.ACTION_POWER_CONNECTED: try {
 				writetoFile(s.format(new Date())+"\tsystemState\tPOWER_CONNECTED\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 6: try {
+			case SlateReceiver.ACTION_USER_PRESENT: try {
 				writetoFile(s.format(new Date())+"\tsystemState\tUSER_PRESENT\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 7: try {
+			case SlateReceiver.ACTION_CAMERA_BUTTON: try {
 				writetoFile(s.format(new Date())+"\tsystemState\tCAMERA_BUTTON_PUSHED\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -154,15 +150,22 @@ public class SlateService extends Service{
 //						e1.printStackTrace();
 //					} break;
 
-			case 9: try {
+			case SlateReceiver.BATTERY_LOW: try {
 				writetoFile(s.format(new Date())+"\tsystemState\tBATTERY_IS_LOW\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 10: try {
+			case SlateReceiver.SYSTEM_SHUTDOWN: try {
 				writetoFile(s.format(new Date())+"\tsystemState\tSYSTEM_SHUTDOWN\n");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} break;
+				
+			case SlateReceiver.BOOT_COMPLETED: try {
+				writetoFile(s.format(new Date())+"\tsystemState\tBOOT_COMPLETED\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -175,28 +178,28 @@ public class SlateService extends Service{
 //						e1.printStackTrace();
 //					} break;
 
-			case 12: try {
+			case SlateReceiver.ACTION_MEDIA_EJECT: try {
 				writetoFile(s.format(new Date())+"\tmediaCardState\tUNMOUNTED\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 13: try {
+			case SlateReceiver.ACTION_MEDIA_MOUNTED: try {
 				writetoFile(s.format(new Date())+"\tmediaCardState\tMOUNTED\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 14: try {
+			case SlateReceiver.PACKAGE_REPLACED: try {
 				writetoFile(s.format(new Date())+"\tappReplaced\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} break;
 
-			case 15: try {
+			case SlateReceiver.PACKAGE_REMOVED: try {
 				writetoFile(s.format(new Date())+"\tappRemoved\n");
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
