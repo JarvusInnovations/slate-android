@@ -38,7 +38,7 @@ public class SlateReceiver extends BroadcastReceiver{
 			}else if((intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED))){
 				Log.i("SLATEd", "System Just Booted");
 				Intent i = new Intent(context, SlateService.class);
-				i.putExtra("SLATEd_CODE", "BOOT_COMPLETED");
+				i.putExtra("SLATEd_CODE", BOOT_COMPLETED);
 				context.startService(i);
 			}else if(intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)){
 				Log.i("SLATEd", "Screen is on");
