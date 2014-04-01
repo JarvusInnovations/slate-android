@@ -63,7 +63,7 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 		
 		Log.d(UpdateApplicationActivity.class.getSimpleName(), "Got current version: "+ versionName);
 
-		UpdateChecker checker = new SimpleUrlUpdateChecker("http://wilco.io/SlateHome/latest", versionName, new VersionComparator());
+		UpdateChecker checker = new SimpleUrlUpdateChecker("http://slate.ediq.org/SlateHome/latest", versionName, new VersionComparator());
 
 		new CheckUpdateTask(checker, this).execute();
 
@@ -145,7 +145,7 @@ public class UpdateApplicationActivity extends Activity implements UpdateChecked
 		ApplicationDownloader downloader = new AbstractApplicationDownloader() {
 			@Override
 			protected String getDownloadUrl() {
-				return "http://wilco.io/SlateHome/" + version + ".apk";
+				return "http://slate.ediq.org/SlateHome/" + version + ".apk";
 			}
 		};
 		

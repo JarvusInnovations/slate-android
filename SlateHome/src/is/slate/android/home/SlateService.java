@@ -49,7 +49,7 @@ public class SlateService extends Service{
 	private static final String ANDROID_SERIAL = android.os.Build.ID;
 	private String ANDROID_MACADDRESS;
 
-		private static final String URL = "http://wilco.io/device-report-log";
+		private static final String URL = "http://slate.ediq.org/device-report-log";
 		Date dat = new Date();
 		//CharSequence TIME = DateFormat.format("yyyy-mm-dd HH:ii:ss", dat.getTime());
 		@SuppressLint("SimpleDateFormat")
